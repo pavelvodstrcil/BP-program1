@@ -5,7 +5,7 @@
 
     <?php
 
-    //vypsani vsech, ale serazenych podle ID -> aby bylo od nejhovejsich
+    //vypsani vsech, ale serazenych podle ID -> aby bylo od nejhovejsich a stránkování po 10
     $reports = App\report::orderBy('id', 'desc')->paginate(10);
 
 
@@ -15,6 +15,16 @@
         }
 
     }
+
+    function getIgnore($val){
+        if ($val == true){
+            return "Ano";
+        }
+            else
+                {return "NE";}
+        }
+
+
 
 
     function getColor($value)
@@ -48,6 +58,7 @@
             <th scope="col">Nejhorší CVSS</th>
             <th scope="col">Neznámé IP</th>
             <th scope="col">Akce/ info</th>
+            <th scope="col">Ignorován?</th>
             <th scope="col">Scanner</th>
             <th scope="col">Datum nahrátí</th>
 
@@ -59,11 +70,10 @@
             @foreach($reports as $report)
 
                 <?php
-
+                //dohledani jmena autora a nazvu scanneru
                 $user = App\User::find($report->user)->name;
-
-
                 $scanner = App\scanner::find($report->scanner)->name;
+
                 //orezani mezer, aby fungovala obre routa
                 $scanner = str_replace(' ', '', $scanner);
 
@@ -97,6 +107,7 @@
 
 
 
+                    <td>{{getIgnore($report->ignore)}}</td>
                     <td>{{$scanner}}</td>
                     <td>{{$report->date}}</td>
         </tr>
