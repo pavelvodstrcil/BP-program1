@@ -103,7 +103,7 @@
 
                foreach ($reportsNes as $rowNes){
                     // vybitam jen radky s "zacatkem" dane site, pouze ty, ktere jsou falsePositive null nebo false
-                   $rowCalc = \App\CVSS_Nessus::where('idRow', $rowNes->id)->where('falsePositive' ,false)->get();
+                   $rowCalc = \App\CVSS_Nessus::where('idRow', $rowNes->id)->where('ignore', false)->where('falsePositive' ,false)->get();
 
                    foreach ($rowCalc as $item){
                       $ENVI = app('\App\Http\Controllers\cvss_nessusController')->getENVI($item->id);
@@ -116,7 +116,7 @@
 
                 foreach ($reportsOP as $rowOP){
 
-                    $rowCalc = \App\CVSS_OpenVas::where('idRow', $rowOP->id)->where('falsePositive' ,false)->get();
+                    $rowCalc = \App\CVSS_OpenVas::where('idRow', $rowOP->id)->where('ignore', false)->where('falsePositive' ,false)->get();
                     foreach ($rowCalc as $item){
                         $ENVI = app('\App\Http\Controllers\cvss_openvasController')->getENVI($item->id);
 

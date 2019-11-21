@@ -126,7 +126,8 @@
 
                 foreach ($reportsOP as $rowOP){
                     //kontrola, jestli je radek falsePositive, pokud jo, tak preskocit a nepridavat do pole na vyhodniceni
-                    if (CVSS_OpenVas::where('idRow', $rowOP)->value("falsePositive") != true)
+                    if (CVSS_OpenVas::where('idRow', $rowOP)->value("falsePositive") == false &&
+                        CVSS_OpenVas::where('idRow', $rowOP)->value("ignore") == false  )
                     {
                         $push = CVSS_OpenVas::where('idRow', $rowOP)->value("ENVI");
                       array_push($arrayCVSSOP, $push);
@@ -135,11 +136,11 @@
 
 
 
-
                 foreach ($reportsNE as $rowNE){
 
                     //kontrola, jestli je radek falsePositive, pokud jo, tak preskocit a nepridavat do pole na vyhodniceni
-                    if (CVSS_Nessus::where('idRow', $rowNE)->value("falsePositive") != true)
+                    if (CVSS_Nessus::where('idRow', $rowNE)->value("falsePositive") == false &&
+                        CVSS_Nessus::where('idRow', $rowNE)->value("ignore") == false    )
                     {
                         $push = CVSS_Nessus::where('idRow', $rowNE)->value("ENVI");
                         array_push($arrayCVSS, $push);

@@ -18,7 +18,7 @@
 
     function getIgnore($val){
         if ($val == true){
-            return "Ano";
+            return "Ignorován!";
         }
             else
                 {return "NE";}

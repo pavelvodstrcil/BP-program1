@@ -9,9 +9,9 @@
 
     $IP = $NET.".".$SUBNET.".".$SUBSUBNET.".".$HOST;
 
-    //udělat kontrolu falsePositive-> pokud true -> ignorovat řádek
+
             // přidat tlačítko pro editaci
-            // e nebo neignorovat, ale řadit na konec? ? ?
+            //  nebo neignorovat, ale řadit na konec? ? ?
 
 
     $reportOP = report_items_openvas::where('IP', $IP)->get();
@@ -25,7 +25,7 @@
 
  function getCVSSEVNVI($row){
 
-     $rowCalc = \App\CVSS_OpenVas::where('idRow', $row->id)->get();
+     $rowCalc = \App\CVSS_OpenVas::where('idRow', $row->id)->where('ignore', false)->get();
      foreach ($rowCalc as $item){
          $ENVI = app('\App\Http\Controllers\cvss_openvasController')->getENVI($item->id);
         return $ENVI;
@@ -34,7 +34,7 @@
  }
     function getCVSSTEMP($row){
 
-           $rowCalc = \App\CVSS_OpenVas::where('idRow', $row->id)->get();
+           $rowCalc = \App\CVSS_OpenVas::where('idRow', $row->id)->where('ignore', false)->get();
         foreach ($rowCalc as $item){
          $TEMP = app('\App\Http\Controllers\cvss_openvasController')->getTEMP($item->id);
         return $TEMP;
@@ -65,8 +65,7 @@
 
 
     function getColor($value, $row){
-        //tady pak jen pridat nebo a pridat nessus
-     if (getfalseOpen($row) == "true"){
+         if (getfalseOpen($row) == "true"){
          return "";
      }elseif(getfalseNes($row) =="true"){
          return "";
