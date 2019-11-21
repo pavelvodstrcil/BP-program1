@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use App\device;
 use App\report_items_openvas;
 use App\report_items_nessus;
-use Illuminate\Http\Request;
 use App\report;
 use App\CVSS_OpenVas;
 use App\CVSS_Nessus;
-use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
 use Auth;
 
@@ -133,5 +131,24 @@ class reportsController extends Controller
     }
 
 
+    // změna change ignore pro report, provedení u řádku v CVSS se postará databáze
+    function changeIgnore ($id){
+    $valueOriginal = report::where('id',$id)->value("ignore");
+
+    $edit= report::find($id);
+
+    if ($valueOriginal){
+
+        $edit-> ignore = false;
+
+    }else {
+
+        $edit-> ignore = true;
+
+    }
+
+        $edit-> save();
+        return redirect('reports');
+    }
 
 }

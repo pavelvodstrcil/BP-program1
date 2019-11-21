@@ -99,6 +99,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>Přepočítat CVSS</li>
+                            <li><a href="reports/ignore/{{$report->id}}">Změna statusu ignorovat</a></li>
                             <li>Uživatel: {{$user}}</li>
                             <li><a data-toggle="modal" data-target="#delete{{$report->id}}">SMAZAT report</a></li>
                         </ul>

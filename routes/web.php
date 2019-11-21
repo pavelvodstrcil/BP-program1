@@ -61,7 +61,7 @@ route::get ('reports/Nessus/process/{id}', function ($id){
     return view('report.process-nessus')->with('id', $id);
 });
 
-
+route::get ('reports/ignore/{id}', 'reportsController@changeIgnore' );
 
 
 /*
@@ -103,7 +103,9 @@ Route::post('/device/store', 'device\DeviceController@store');
 Route::get ('/device/edit/{id}', 'device\DeviceController@edit');
 Route::post ('/device/edit/update', 'device\DeviceController@update');
 
-Route::get ('/device/ping/{id}', function ($id){return view('device.ping')->with('id', $id);});
+Route::get ('/device/ping/{id}', function ($id){
+    return view('device.ping')->with('id', $id);
+});
 Route::get ('device/delete/{id}', 'device\DeviceController@destroy');
 
 Route::get('/device/nmap/{id}', function($id){
