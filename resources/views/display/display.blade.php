@@ -6,6 +6,7 @@
     use App\report_items_nessus ;
     use App\report_items_openvas;
     use App\device;
+    use App\report;
 
     $IP = $NET.".".$SUBNET.".".$SUBSUBNET.".".$HOST;
 
@@ -14,8 +15,33 @@
             //  nebo neignorovat, ale řadit na konec? ? ?
 
 
-    $reportOP = report_items_openvas::where('IP', $IP)->get();
-    $reportNES = report_items_nessus::where('Host', $IP)->get();
+    $reports = report::where('ignore', false)->pluck("id");
+
+
+
+    $reportOPAAL = report_items_openvas::where('IP', $IP)->get();
+    $reportNESAAL = report_items_nessus::where('Host', $IP)->get();
+
+    $reportOP =array();
+    $reportNES = array();
+
+    foreach($reports as $report ){
+
+        $reportOPAAL = report_items_openvas::where('IP', $IP)->where('idReport', $report)->get();
+
+    foreach ($reportOPAAL as $mrdat){
+      array_push($reportOP, $mrdat);
+    }
+
+
+        $reportNESAAL = report_items_nessus::where('Host', $IP)->get();
+
+    }
+
+
+
+  print_r($reportOP);
+
 
     //serazeni? podle zavaznosti?
     // odkaz na otevreni celeho radku
@@ -140,10 +166,10 @@
     <?php
 
                $cvss2TEMP = getCVSSTEMP($row);
-                 $cvss2ENVI = getCVSSEVNVI($row);
+               $cvss2ENVI = getCVSSEVNVI($row);
 
                 ?>
-
+        @if ( !empty($cvss2TEMP) )
                 <td>{{$row->NVTName}}</td>
 
                 <td>{{$row->Timestamp}}</td>
@@ -152,7 +178,7 @@
                 <td style="color: black" bgcolor="{{getFalseColor(getfalseOpen($row))}}"  > {{getfalseOpen($row)}}</td>
                 <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->id}}">Editovat</a></td>
                 <td><a href="../../../../reports/OpenVas/row/{{$row->id}}">Zobrazit řádek</a></td>
-
+        @endif
         </tr>
         @endforeach
 
@@ -180,7 +206,7 @@
             @foreach($reportNES as $row)
                 <?php $cvssTEMP = getCVSSTEMP3($row);
                         $cvssENVI = getCVSSENVI3($row);?>
-                    @if ( !empty($cvssTEMP) )
+
                         <td>{{$row->Name}}</td>
                         <td>{{$row->Timestamp}}</td>
                         <td style="color: black" bgcolor="{{getColor($cvssENVI, $row)}}">{{$cvssENVI}}</td>
@@ -188,7 +214,7 @@
                         <td style="color: black" bgcolor="{{getFalseColor(getfalseNes($row))}}"  > {{getfalseNes($row)}}</td>
                         <td><a href="../../../../reports/cvss/Nessus/edit/{{$row->id}}">Editovat</a></td>
                         <td><a href="../../../../reports/Nessus/row/{{$row->id}}">Zobrazit řádek</a></td>
-                    @endif
+
 
         </tr>
         @endforeach
