@@ -9,64 +9,33 @@
     use App\report;
 
     $IP = $NET.".".$SUBNET.".".$SUBSUBNET.".".$HOST;
-
+//------------------------------------------------------------PISKOVISTE------------------------------------------------------
 
             // přidat tlačítko pro editaci
             //  nebo neignorovat, ale řadit na konec? ? ?
 
 
-    $reports = report::where('ignore', false)->pluck("id");
+
+    $reportOP = DB::table('report_items_openvas')
+        ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
+        where('report_items_openvas.IP', $IP)->where('CVSS_OpenVas.ignore', false)->get();
 
 
 
-    $reportOPAAL = report_items_openvas::where('IP', $IP)->get();
-    $reportNESAAL = report_items_nessus::where('Host', $IP)->get();
 
-    $reportOP =array();
-    $reportNES = array();
-
-    foreach($reports as $report ){
-
-        $reportOPAAL = report_items_openvas::where('IP', $IP)->where('idReport', $report)->get();
-
-    foreach ($reportOPAAL as $mrdat){
-      array_push($reportOP, $mrdat);
-    }
-
-
-        $reportNESAAL = report_items_nessus::where('Host', $IP)->get();
-
-    }
+    $reportNES = report_items_nessus::where('Host', $IP)->get();
 
 
 
-  print_r($reportOP);
-
-
+//------------------------------------------------------------PISKOVISTE------------------------------------------------------
     //serazeni? podle zavaznosti?
     // odkaz na otevreni celeho radku
     // odkaz na editaci CVSS? ? ?
     // vytvorit objekt? asi radek (aby to pak slo radit?)
     //
 
- function getCVSSEVNVI($row){
 
-     $rowCalc = \App\CVSS_OpenVas::where('idRow', $row->id)->where('ignore', false)->get();
-     foreach ($rowCalc as $item){
-         $ENVI = app('\App\Http\Controllers\cvss_openvasController')->getENVI($item->id);
-        return $ENVI;
-     }
 
- }
-    function getCVSSTEMP($row){
-
-           $rowCalc = \App\CVSS_OpenVas::where('idRow', $row->id)->where('ignore', false)->get();
-        foreach ($rowCalc as $item){
-         $TEMP = app('\App\Http\Controllers\cvss_openvasController')->getTEMP($item->id);
-        return $TEMP;
-     }
-
-    }
 
     function getCVSSTEMP3($row){
 
@@ -113,32 +82,33 @@
 
 
     function getfalseOpen($row){
-        $return = \App\CVSS_OpenVas::where('idRow', $row->id)->get();
-    foreach ($return as $ret){
-        if (empty($ret->falsePositive)){
-            return "false";
+        $return = \App\CVSS_OpenVas::where('idRow', $row->id)->value("falsePositive");
+
+        if ($return){
+            return "true";
         }
-        return "true";
-    }
+        return "false";
     }
 
+
+    //Tohle tu byt musi, aby se vypisovalo true/false -> jinak vraci 1/0 - neni tak pekne
     function getfalseNes($row){
-        $return = \App\CVSS_Nessus::where('idRow', $row->id)->get();
-        foreach ($return as $ret){
-            if (empty($ret->falsePositive)){
+        $return = \App\CVSS_Nessus::where('idRow', $row->id)->value("falsePositive");
+            if (empty($return)){
                 return "false";
             }
             return "true";
-        }
+
     }
 
 
 
     function getFalseColor($return){
-
      if ($return == "true"){
          return "green";
-         }else {return "red";}
+         }else {
+         return "red";
+     }
 
 }
 
@@ -163,22 +133,14 @@
     <tbody>
         <tr>
         @foreach($reportOP as $row)
-    <?php
-
-               $cvss2TEMP = getCVSSTEMP($row);
-               $cvss2ENVI = getCVSSEVNVI($row);
-
-                ?>
-        @if ( !empty($cvss2TEMP) )
                 <td>{{$row->NVTName}}</td>
-
                 <td>{{$row->Timestamp}}</td>
-                <td style="color: black"  bgcolor="{{getColor($cvss2ENVI, $row)}}">{{$cvss2ENVI}}</td>
-                <td style="color: black" bgcolor="{{getColor($cvss2TEMP, $row)}}"  > {{$cvss2TEMP}}</td>
+                <td style="color: black"  bgcolor="{{getColor($row->ENVI, $row)}}">{{$row->ENVI}}</td>
+                <td style="color: black" bgcolor="{{getColor($row->TEMP, $row)}}"  > {{$row->TEMP}}</td>
                 <td style="color: black" bgcolor="{{getFalseColor(getfalseOpen($row))}}"  > {{getfalseOpen($row)}}</td>
                 <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->id}}">Editovat</a></td>
                 <td><a href="../../../../reports/OpenVas/row/{{$row->id}}">Zobrazit řádek</a></td>
-        @endif
+
         </tr>
         @endforeach
 
