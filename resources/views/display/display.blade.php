@@ -23,7 +23,9 @@
 
 
 
-    $reportNES = report_items_nessus::where('Host', $IP)->get();
+    $reportNES   = DB::table('report_items_nessus')
+        ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
+        where('report_items_nessus.Host', $IP)->where('CVSS_Nessus.ignore', false)->get();
 
 
 
@@ -58,7 +60,6 @@
     }
 
 
-
     function getColor($value, $row){
          if (getfalseOpen($row) == "true"){
          return "";
@@ -80,7 +81,7 @@
         }else {return "";}
     }}
 
-
+    //Tohle tu byt musi, aby se vypisovalo true/false -> jinak vraci 1/0 -aspoň se muze zmenit text...
     function getfalseOpen($row){
         $return = \App\CVSS_OpenVas::where('idRow', $row->id)->value("falsePositive");
 
@@ -93,11 +94,11 @@
 
     //Tohle tu byt musi, aby se vypisovalo true/false -> jinak vraci 1/0 - neni tak pekne
     function getfalseNes($row){
-        $return = \App\CVSS_Nessus::where('idRow', $row->id)->value("falsePositive");
-            if (empty($return)){
-                return "false";
+        $return = \App\CVSS_Nessus::where('idRow', $row->idRow)->value("falsePositive");
+            if ($return){
+                return "true";
             }
-            return "true";
+            return "false";
 
     }
 
@@ -133,6 +134,8 @@
     <tbody>
         <tr>
         @foreach($reportOP as $row)
+
+
                 <td>{{$row->NVTName}}</td>
                 <td>{{$row->Timestamp}}</td>
                 <td style="color: black"  bgcolor="{{getColor($row->ENVI, $row)}}">{{$row->ENVI}}</td>
@@ -165,17 +168,15 @@
         </thead>
 
         <tr>
-            @foreach($reportNES as $row)
-                <?php $cvssTEMP = getCVSSTEMP3($row);
-                        $cvssENVI = getCVSSENVI3($row);?>
 
+          @foreach($reportNES as $row)
                         <td>{{$row->Name}}</td>
-                        <td>{{$row->Timestamp}}</td>
-                        <td style="color: black" bgcolor="{{getColor($cvssENVI, $row)}}">{{$cvssENVI}}</td>
-                        <td style="color: black" bgcolor="{{getColor($cvssTEMP, $row)}}">{{$cvssTEMP}}</td>
+                        <td>Není dostupné</td>
+                        <td style="color: black" bgcolor="{{getColor($row->ENVI, $row)}}">{{$row->ENVI}}</td>
+                        <td style="color: black" bgcolor="{{getColor($row->TEMP, $row)}}">{{$row->TEMP}}</td>
                         <td style="color: black" bgcolor="{{getFalseColor(getfalseNes($row))}}"  > {{getfalseNes($row)}}</td>
-                        <td><a href="../../../../reports/cvss/Nessus/edit/{{$row->id}}">Editovat</a></td>
-                        <td><a href="../../../../reports/Nessus/row/{{$row->id}}">Zobrazit řádek</a></td>
+                        <td><a href="../../../../reports/cvss/Nessus/edit/{{$row->idRow }}">Editovat</a></td>
+                        <td><a href="../../../../reports/Nessus/row/{{$row->idRow}}">Zobrazit řádek</a></td>
 
 
         </tr>
