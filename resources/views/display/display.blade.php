@@ -9,11 +9,6 @@
     use App\report;
 
     $IP = $NET.".".$SUBNET.".".$SUBSUBNET.".".$HOST;
-//------------------------------------------------------------PISKOVISTE------------------------------------------------------
-
-            // přidat tlačítko pro editaci
-            //  nebo neignorovat, ale řadit na konec? ? ?
-
 
 
     $reportOP = DB::table('report_items_openvas')
@@ -29,7 +24,6 @@
 
 
 
-//------------------------------------------------------------PISKOVISTE------------------------------------------------------
     //serazeni? podle zavaznosti?
     // odkaz na otevreni celeho radku
     // odkaz na editaci CVSS? ? ?
@@ -38,26 +32,6 @@
 
 
 
-
-    function getCVSSTEMP3($row){
-
-        $rowCalc = \App\CVSS_Nessus::where('idRow', $row->id)->get();
-        foreach ($rowCalc as $item){
-            $TEMP = app('\App\Http\Controllers\cvss_nessusController')->calculateCVSS_TEMP($item->id);
-            return $TEMP;
-        }
-
-    }
-
-    function getCVSSENVI3($row){
-
-        $rowCalc = \App\CVSS_Nessus::where('idRow', $row->id)->get();
-        foreach ($rowCalc as $item){
-            $ENVI = app('\App\Http\Controllers\cvss_nessusController')->calculateCVSS_ENVI($item->id);
-            return $ENVI;
-        }
-
-    }
 
 
     function getColor($value, $row){
