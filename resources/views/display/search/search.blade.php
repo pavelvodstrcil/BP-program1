@@ -35,15 +35,44 @@
                 where('report_items_nessus.CVE', $search)->where('CVSS_Nessus.ignore', false)->get();
             break;
         case 2:
-            echo "i equals 2";
+            $openvas = DB::table('report_items_openvas')
+                ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
+                where('report_items_openvas.IP',  'ilike', '%'.$search.'%')->where('CVSS_OpenVas.ignore', false)->get();
+
+
+
+            $nessus = DB::table('report_items_nessus')
+                ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
+                where('report_items_nessus.Host', 'ilike', '%'.$search.'%')->where('CVSS_Nessus.ignore', false)->get();
+
             break;
-        default:
+
+        case 3:
+            $openvas = DB::table('report_items_openvas')
+                ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
+                where('report_items_openvas.NVTName',  'ilike', '%'.$search.'%')->where('CVSS_OpenVas.ignore', false)->get();
+
+
+
+            $nessus = DB::table('report_items_nessus')
+                ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
+                where('report_items_nessus.Name', 'ilike', '%'.$search.'%')->where('CVSS_Nessus.ignore', false)->get();
+
+            break;
+
+            default:
             $openvas=array();
             $nessus = array();
     }
 
 
-
+    function getfalseNes($row){
+        $return = \App\CVSS_Nessus::where('idRow', $row->idRow)->value("falsePositive");
+        if ($return){
+            return "true";
+        }
+        return "false";
+        }
 
 
     function getfalseOpen($row){
@@ -54,6 +83,7 @@
         }
         return "false";
     }
+
 
     ?>
 
@@ -104,7 +134,7 @@
     </form>
 
 <!-- KONEC FORMULARE! -->
-   @if ($type == 1)
+   @if ($type == 1 or $type == 2 or $type == 3)
         <h3 align="center">Pro výraz: {{$search}} byly nalezeny tyto výsledky pro OpenVas: </h3>
         <table class="table">
             <thead>
@@ -122,9 +152,7 @@
             </thead>
             <tbody>
             <tr>
-                <?php
-                print_r($nessus);
-                ?>
+
                 @foreach($openvas as $row)
 
 
@@ -187,3 +215,4 @@
 
 
 @endsection
+

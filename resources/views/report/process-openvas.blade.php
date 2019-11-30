@@ -72,25 +72,33 @@
 
 
 
-    @foreach($addresses as $ad)
-        <h3 >INFO o: {{$ad->IP}} </h3>
 
 
-        <h4>Nalezené služby:</h4>
-        @foreach($servicesArray[$ad->IP] as $row)
-            <li>{{$row}}</li>
-        @endforeach
+           @foreach($addresses as $ad)
+               <h3 >INFO o: {{$ad->IP}} </h3>
+           <table class="table table-bordered">
+               <tbody>
+               <tr>
+                   <td>
+                       <h4>Nalezené služby:</h4>
+                       @foreach($servicesArray[$ad->IP] as $row)
+                           <li>{{$row}}</li>
+                       @endforeach
+                       @foreach($othersArray[$ad->IP] as $row)
+                           <li>{{$row}}</li>
+                       @endforeach
+                   </td>
 
-        <h4></h4>
-        @foreach($othersArray[$ad->IP] as $row)
-            <li>{{$row}}</li>
-        @endforeach
 
-        <h4>Otevřené porty:</h4>
-        @foreach($portsArray[$ad->IP] as $row)
-            <li>{{$row}}</li>
-        @endforeach
-        <br>
+                   <td>
+                       <h4>Otevřené porty:</h4>
+                       @foreach($portsArray[$ad->IP] as $row)
+                           <li>{{$row}}</li>
+                       @endforeach
+                   </td>
+               </tr>
+               </tbody>
+           </table>
 
     @endforeach
 
