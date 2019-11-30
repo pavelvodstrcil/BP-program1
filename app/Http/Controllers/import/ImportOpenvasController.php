@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Auth;
 
 
 class ImportOpenvasController extends Controller
@@ -43,7 +44,8 @@ class ImportOpenvasController extends Controller
             //Delám si rovnou zápis do DB, že se takový soubor nahrál
             //zatím bez uživatele -> natvrdo
             $date = date("Y-m-d");
-           $id =  DB::table('report')->insertGetId(['name' => $filename, 'date' => $date, 'scanner' => "1", 'user' => "1"]);
+            $user = Auth::user()->id;
+           $id =  DB::table('report')->insertGetId(['name' => $filename, 'date' => $date, 'scanner' => "1", 'user' => $user]);
 
 
 

@@ -216,7 +216,6 @@ class cvss_nessusController extends Controller
         $count = 0;
         foreach ($rows as $row) {
 
-            //  $count += $this->downloadCVSS($row->id, $row->PluginID, $idReport);
             $this->downloadCVSS($row->id, $row->PluginID, $idReport);
 
 
