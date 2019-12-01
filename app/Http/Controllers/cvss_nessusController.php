@@ -349,6 +349,7 @@ class cvss_nessusController extends Controller
 
             //získání cesty a názvu souboru
             $pathfile = preg_split('/:/', $return, -1, PREG_SPLIT_NO_EMPTY);
+            $pos = false;
             if (!empty($pathfile[0])) {
 
                 try {

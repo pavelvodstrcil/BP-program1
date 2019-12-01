@@ -44,6 +44,7 @@ $devices = App\device::all();
     <table class="table">
         <thead>
         <tr>
+            @sortablelink('name')
             <th scope="col">Zařízení</th>
             <th scope="col">IP</th>
             <th scope="col">Nejvyšší CVSS OpenVas</th>
@@ -102,6 +103,7 @@ $devices = App\device::all();
                 $ipAdress = str_replace(".", "/", $device->IP);
 
                 ?>
+
                 <td>{{$device->name}}</td>
                 <td><a href="../../display/{{$ipAdress}}">{{$device->IP}}</td>
                 <td style="color:black" bgcolor="{{getColor($worstCVSS)}}"> {{$worstCVSS}}</td>
