@@ -18,21 +18,20 @@
 
         if($value == 0.0 ){
             return  "#00ff00";
-        }elseif($value <=3.9) {
+        }elseif($value <=3.9 and $value >= 0.1) {
             return "#00ff33";
-        }elseif ($value <=6.9){
+        }elseif ($value <=6.9 and $value >= 4.0){
             return   "#ff6600";
-        }elseif($value <= 8.9) {
+        }elseif($value <= 8.9and $value >= 7.0) {
             return "#ff0033";
-        }elseif ($value <=10.0){
+        }elseif ($value <=10.0 and $value >= 9.0){
             return "#990000";
-        }else {return " ";}
+            }elseif ($value == -1){
+            return "";
+        }else {return "";}
     }
-
-
-
-
-$devices = App\device::all();
+  $devices = App\device::all();
+    $vypis = array();
 
     ?>
 
@@ -40,11 +39,12 @@ $devices = App\device::all();
 
 
 <h1 align="center">Zobrazení CVSS pro uložená zařízení</h1>
+    <h3 align="center">Řazení: <a href="?filter=#">OpenVas</a>      <a href="?filter=Nessus">Nessus</a> </h3>
 
     <table class="table">
         <thead>
         <tr>
-            @sortablelink('name')
+
             <th scope="col">Zařízení</th>
             <th scope="col">IP</th>
             <th scope="col">Nejvyšší CVSS OpenVas</th>
@@ -53,8 +53,7 @@ $devices = App\device::all();
         </thead>
 
         @foreach($devices as $device)
-            <tr>
-                <?php
+           <?php
 
 
                 $reportsOV=report_items_openvas::where('IP', $device->IP)->pluck('id');
@@ -88,32 +87,76 @@ $devices = App\device::all();
 
 
                         if (empty($CVSSs)){
-                    $worstCVSS = "Žádný záznam CVSS";
+                    $worstCVSS = -1;
                 }else {
                     $worstCVSS = max($CVSSs);
                 }
 
 
                 if (empty($CVSSs_NE)){
-                    $worstCVSS_NE = "Žádný záznam CVSS";
+                    $worstCVSS_NE = -1;
                 }else {
                     $worstCVSS_NE = max($CVSSs_NE);
                 }
                 //do odkazu na zobrazeni CVSS - vyuziva funkci jiz vytvorenou
                 $ipAdress = str_replace(".", "/", $device->IP);
 
+
+
+               $objekt = (object)array("name" => $device->name, "IP" => $device->IP, "CVSSO" => $worstCVSS, "CVSS_NE" => $worstCVSS_NE);
+               array_push($vypis, $objekt);
+
+
                 ?>
 
-                <td>{{$device->name}}</td>
-                <td><a href="../../display/{{$ipAdress}}">{{$device->IP}}</td>
-                <td style="color:black" bgcolor="{{getColor($worstCVSS)}}"> {{$worstCVSS}}</td>
-                <td style="color:black" bgcolor="{{getColor($worstCVSS_NE)}}">{{$worstCVSS_NE}}</td>
 
-
-            </tr>
         @endforeach
+
+        <?php
+
+
+        if (!empty($_GET['filter'])){
+
+            function comparator($object1, $object2) {
+
+                return $object1->CVSS_NE < $object2->CVSS_NE;
+            }
+
+        }
+        else {
+
+            function comparator($object1, $object2) {
+
+                return $object1->CVSSO < $object2->CVSSO;
+            }
+
+        }
+
+
+
+
+        usort($vypis, 'comparator');
+
+
+
+        ?>
+
+        @foreach($vypis as $row)
+        <tr>
+        <td>{{$row->name}}</td>
+        <td><a href="../../display/{{$ipAdress}}">{{$row->IP}}</td>
+        <td style="color:black" bgcolor="{{getColor($row->CVSSO)}}"> {{$row->CVSSO}}</td>
+        <td style="color:black" bgcolor="{{getColor($row->CVSS_NE)}}">{{$row->CVSS_NE}}</td>
+        @endforeach
+
+        </tr>
+
+
+
     </table>
 
+    <h5 align="center">Hodnota -1 znamená žádný záznam CVSS!!!!</h5>
     <h4 align="center">Kliknutím na IP adresu zobrazíte všechny CVSS záznamy k dané IP!</h4>
+
 
 @endsection
