@@ -4,8 +4,17 @@
 
     <?php
     use App\permissions;
+    use App\user;
     $permissionALL = permissions::all();
-    $permission = app('\App\Http\Controllers\permissionsController')->getPermission(Auth::user(), "users");
+
+    $users = user::all()->count();
+
+    if($users == 0 ){
+        $permission = true;
+    }else {
+        $permission = app('\App\Http\Controllers\permissionsController')->getPermission(Auth::user(), "users");
+    }
+
 
     ?>
     @if ($permission)

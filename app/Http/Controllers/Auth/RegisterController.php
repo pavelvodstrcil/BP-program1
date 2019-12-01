@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 
+
 class RegisterController extends Controller
 {
     /*
@@ -40,7 +41,15 @@ class RegisterController extends Controller
     {
         //zakomentovano - guest - muze se kdokoli registrovat, auth - muze jen prohlaseny uzivatel
       //  $this->middleware('guest');
-       $this->middleware('auth');
+
+
+       $users = user::all()->count();
+
+       if($users == 0 ){
+           $this->middleware('guest');
+       }else {
+           $this->middleware('auth');
+       }
     }
 
     /**
