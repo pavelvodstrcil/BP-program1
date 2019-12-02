@@ -24,8 +24,9 @@
 
            <?php
                         $worstCVSSarray = app('\App\Http\Controllers\HomeController')->getCVSSarray();
+                       if (!empty($worstCVSSarray)){
                         $worstCVSSvalue = max($worstCVSSarray);
-
+                       } else {$worstCVSSvalue = 0;}
             ?>
                         <li>Počet nahraných reportů: {{$size}}</li>
                         <li>Nejhorší CVSS ze všech nahraných reportů: {{$worstCVSSvalue}}</li>
