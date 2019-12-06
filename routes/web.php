@@ -254,6 +254,23 @@ Route::get ('missingDevices/{id}', function ($id){
     Route::get ('/search', 'searchController@index');
 
 
+
+
+    /*
+|--------------------------------------------------------------------------
+|UZIVATELE
+|-------------------------------------------------------------------------
+|
+|Routy okolo uzivatelu - sprava
+|
+*/
+
+
+    route::get ('users/change', function(){return view('auth.changePass');});
+ //   route::post ('users/update', function(){return view('message')->with ("message", "test");});
+    Route::post ('users/update', 'changePassController@changePassword');
+
+
 /*
 |--------------------------------------------------------------------------
 | TESTOVACNIIIII
