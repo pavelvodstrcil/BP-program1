@@ -97,7 +97,10 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                         <li><a href="/register">Přidat nového uživatele</a></li>
-                                        <li><a href="/XXXXXXXX">Správa uživatelů</a></li>
+                                        <li><a href="/users/change">Změna vlastního hesla</a></li>
+                                        <li><a href="/users/premissions">Změna oprávnění</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="/users/show">Správa uživatelů</a></li>
                                     </ul>
                                 </div></li>
 
@@ -134,6 +137,7 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+                                    <li><a href="/users/change">Změna vlastního hesla</a></li>
                                 </ul>
                             </li>
                         @endguest

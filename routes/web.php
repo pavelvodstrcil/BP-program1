@@ -270,6 +270,8 @@ Route::get ('missingDevices/{id}', function ($id){
  //   route::post ('users/update', function(){return view('message')->with ("message", "test");});
     Route::post ('users/update', 'changePassController@changePassword');
 
+    route::get ('users/show', function(){return view('auth.users');});
+
 
 /*
 |--------------------------------------------------------------------------
