@@ -223,10 +223,16 @@ Route::get ('types/display', function (){
     return view('display.types.types_display');
 });
 
-//zobrazeni typy zarizeni
+//zobrazeni kriticnost zarizeni
 Route::get ('criticality/display', function (){
     return view('display.types.criticality_show');
 });
+
+
+//zobrazeni "od - do" cvss
+    Route::get ('values/display', function (){
+        return view('display.values.values');
+    });
 
 
 //zobrazeni podle  IP
@@ -271,7 +277,7 @@ Route::get ('missingDevices/{id}', function ($id){
     Route::post ('users/update', 'changePassController@changePassword');
 
     route::get ('users/show', function(){return view('auth.users');});
-
+    Route::get ('users/delete/{id}', 'UserController@deleteUser');
 
 /*
 |--------------------------------------------------------------------------
