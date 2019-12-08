@@ -70,6 +70,8 @@
                                     <li><a href="/types/display">Zobrazení dle typu zařízení</a></li>
                                     <li><a href="/criticality/display">Zobrazení dle kritičnosti</a></li>
                                     <li><a href="/device/show/CVSS">Zobrazit všechny zařízení</a></li>
+                                    <li><a href="/search">Vyhledávání</a></li>
+                                    <li><a href="/values/display">Zobrazení dle hodnot</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li><a href="/groups/manage/show">Správa skupin zařízení</a></li>
                                 </ul>

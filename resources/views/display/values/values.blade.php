@@ -11,60 +11,37 @@
     use App\report;
 
 
-   //abych věděl co mam dale ukazovat a co davat do switche - a co vkladat do formu
-    if (!empty($_GET['search']) && !empty($_GET['type'])){
-        $search = $_GET['search'];
-       $type = $_GET['type'];
-    }
+    //abych věděl co mam dale ukazovat a co davat do switche - a co vkladat do formu
+    if (!empty($_GET['from']) && !empty($_GET['to'])){
+        $from = $_GET['from'];
+        $to = $_GET['to'];
+        $false = $_GET['false'];
 
+    }
     else{
-        $search = "";
-        $type = 0;
+        $from = 10;
+        $to = 10;
+        $false = 0;
+
     }
-
-
-    switch ($type) {
-        case 0:
-            break;
-        case 1:
-            $openvas = DB::table('report_items_openvas')
-                ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
-                where('report_items_openvas.CVEs', $search)->where('CVSS_OpenVas.ignore', false)->get();
-            $nessus = DB::table('report_items_nessus')
-                ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
-                where('report_items_nessus.CVE', $search)->where('CVSS_Nessus.ignore', false)->get();
-            break;
-        case 2:
-            $openvas = DB::table('report_items_openvas')
-                ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
-                where('report_items_openvas.IP',  'ilike', '%'.$search.'%')->where('CVSS_OpenVas.ignore', false)->get();
-
-
-
-            $nessus = DB::table('report_items_nessus')
-                ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
-                where('report_items_nessus.Host', 'ilike', '%'.$search.'%')->where('CVSS_Nessus.ignore', false)->get();
-
-            break;
-
-        case 3:
-            $openvas = DB::table('report_items_openvas')
-                ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
-                where('report_items_openvas.NVTName',  'ilike', '%'.$search.'%')->where('CVSS_OpenVas.ignore', false)->get();
-
-
-
-            $nessus = DB::table('report_items_nessus')
-                ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
-                where('report_items_nessus.Name', 'ilike', '%'.$search.'%')->where('CVSS_Nessus.ignore', false)->get();
-
-            break;
-
-            default:
-            $openvas=array();
-            $nessus = array();
+echo $from;
+    if ($false == 0){
+    $openvas = DB::table('report_items_openvas')
+        ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
+        where('CVSS_OpenVas.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_OpenVas.ignore', false)
+        ->where('falsePositive',false)->get();
     }
+    else
 
+        {
+            $openvas = DB::table('report_items_openvas')
+                ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
+                where('CVSS_OpenVas.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_OpenVas.ignore', false)->get();
+
+        }
+
+   // $openvas = CVSS_OpenVas::where('ENVI', '<=', $to)->where('ENVI', '>=', $from)->get();
+    $nessus = array();
 
     function getfalseNes($row){
         $return = \App\CVSS_Nessus::where('idRow', $row->idRow)->value("falsePositive");
@@ -72,7 +49,7 @@
             return "true";
         }else {
         return "false";
-        }}
+    }}
 
 
     function getfalseOpen($row){
@@ -81,9 +58,16 @@
         if ($return){
             return "true";
         }else {
-        return "false";
-    }}
+       return "false";
+        }
+    }
 
+    function getValue($false){
+        if ($false == 1){
+            return "ANO";
+        }else
+        {return "NE";}
+    }
 
     ?>
 
@@ -95,33 +79,37 @@
 
 
 
-<h1 align="center">Vyhledávání</h1>
-
+    <h1 align="center">Vyhledávání</h1>
 
     <form class="form-horizontal">
         <fieldset>
 
             <div class="form-group">
-                <label class="col-md-4 control-label" for="textinput">Hledaný výraz:</label>
+                <label class="col-md-4 control-label" for="textinput">Hodnota CVSS od:</label>
                 <div class="col-md-4">
-                    <input id="search" name="search"  value="{{$search}}" type="text"  class="form-control input-md">
-                       </div>
+                    <input id="from" name="from"  value="{{$from}}" type="text"  class="form-control input-md">
+                </div>
             </div>
 
 
             <div class="form-group">
-                <label class="col-md-4 control-label" for="selectbasic">Hledat mezi:</label>
+                <label class="col-md-4 control-label" for="textinput">Hodnota CVSS do:</label>
                 <div class="col-md-4">
-                    <select id="type" name="type" class="form-control">
-                        <option value="{{$type}}">Vyberte prosím</option>
-                        <option value="1">CVE</option>
-                        <option value="2">IP</option>
-                        <option value="3">řádky reportu - název</option>
-                        <option value="lol">Zkusím štěstí</option>
-                    </select>
+                    <input id="to" name="to"  value="{{$to}}" type="text"  class="form-control input-md">
                 </div>
             </div>
 
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="selectbasic">Zahrnout i falsePositive záznamy</label>
+                <div class="col-md-4">
+                    <select id="false" name="false" class="form-control">
+                        <option value="{{$false}}">{{getValue($false)}}</option>
+                        <option value="1">ANO</option>
+                        <option value="0">NE</option>
+                        </select>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label class="col-md-4 control-label" for="singlebutton"></label>
@@ -130,12 +118,14 @@
                 </div>
             </div>
 
+
+
+
         </fieldset>
     </form>
 
-<!-- KONEC FORMULARE! -->
-   @if ($type == 1 or $type == 2 or $type == 3)
-        <h3 align="center">Pro výraz: {{$search}} byly nalezeny tyto výsledky pro OpenVas: </h3>
+    <!-- KONEC FORMULARE! -->
+
         <table class="table">
             <thead>
             <tr>
@@ -209,7 +199,6 @@
 
 
 
-    @endif
 
 
 

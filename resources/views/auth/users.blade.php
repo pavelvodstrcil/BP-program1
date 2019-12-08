@@ -21,11 +21,26 @@
 
     ?>
 
+    <?php
+    $permission = app('\App\Http\Controllers\permissionsController')->getPermission(Auth::user(), "report_CVSS");
+    ?>
+
+    @if ($permission)
     <h2 align="center">Správa uživatelů</h2>
 
 
     <br>
+    @if($errors->any())
+        <div align="center" class="alert alert-danger">
+            {{$errors->first()}}
+            </div>
+    @endif
 
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @endif
 
     <form class="form-horizontal" action="#" method="GET">
 
@@ -116,6 +131,8 @@
                         <a href="delete/{{$user->id}}">
                             <button type="button" class="btn btn-secondary">ANO</button>
                         </a>
+
+
                     </div>
                 </div>
 
@@ -127,7 +144,9 @@
 
     <div align="center">{{$users->links()}}</div>
 
-
+    @else
+        <h1 align="center" > Na tuto operaci namáte oprávnění!  :-)</h1>
+    @endif
 
 
 @endsection
