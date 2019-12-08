@@ -72,7 +72,7 @@
     ?>
 
 
-<h2 align="center">Vyberte prosím siť</h2>
+<h2 align="center">Vyberte prosím síť</h2>
     <h3 align="center">Z reportů byly detekovány tyto sítě:</h3>
     <table class="table">
         <thead>

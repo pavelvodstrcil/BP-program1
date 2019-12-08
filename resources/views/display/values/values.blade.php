@@ -24,12 +24,18 @@
         $false = 0;
 
     }
-echo $from;
+
     if ($false == 0){
     $openvas = DB::table('report_items_openvas')
         ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
         where('CVSS_OpenVas.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_OpenVas.ignore', false)
         ->where('falsePositive',false)->get();
+
+
+        $nessus = DB::table('report_items_nessus')
+            ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
+            where('CVSS_Nessus.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_Nessus.ignore', false)
+            ->where('CVSS_Nessus.falsePositive',false)->get();
     }
     else
 
@@ -38,10 +44,13 @@ echo $from;
                 ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
                 where('CVSS_OpenVas.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_OpenVas.ignore', false)->get();
 
+            $nessus = DB::table('report_items_nessus')
+                ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
+                where('CVSS_Nessus.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_Nessus.ignore', false)->get();
+
         }
 
-   // $openvas = CVSS_OpenVas::where('ENVI', '<=', $to)->where('ENVI', '>=', $from)->get();
-    $nessus = array();
+
 
     function getfalseNes($row){
         $return = \App\CVSS_Nessus::where('idRow', $row->idRow)->value("falsePositive");
@@ -69,6 +78,41 @@ echo $from;
         {return "NE";}
     }
 
+
+
+    function getColor($value, $row){
+
+        if (getfalseOpen($row) == "true"){
+            return "";
+        }elseif(getfalseNes($row) =="true"){
+            return "";
+
+        }else{
+
+        if($value == 0.0 ){
+            return  "#00ff00";
+        }elseif($value <=3.9 and $value >= 0.1) {
+            return "#00ff33";
+        }elseif ($value <=6.9 and $value >= 4.0){
+            return   "#ff6600";
+        }elseif($value <= 8.9and $value >= 7.0) {
+            return "#ff0033";
+        }elseif ($value <=10.0 and $value >= 9.0){
+            return "#990000";
+        }elseif ($value == -1){
+            return "";
+        }else {return "";}
+    }}
+
+    function getFalseColor($return){
+        if ($return == "true"){
+            return "green";
+        }else {
+            return "red";
+        }}
+
+
+
     ?>
 
 
@@ -79,7 +123,7 @@ echo $from;
 
 
 
-    <h1 align="center">Vyhledávání</h1>
+    <h1 align="center">Zobrazení dle rozpětí </h1>
 
     <form class="form-horizontal">
         <fieldset>
@@ -92,7 +136,7 @@ echo $from;
             </div>
 
 
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-md-4 control-label" for="textinput">Hodnota CVSS do:</label>
                 <div class="col-md-4">
                     <input id="to" name="to"  value="{{$to}}" type="text"  class="form-control input-md">
@@ -100,8 +144,8 @@ echo $from;
             </div>
 
 
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="selectbasic">Zahrnout i falsePositive záznamy</label>
+            <div class="form-group row">
+                <label class="col-md-4 control-label" for="textinput">Zahrnout falsePositive záznamy:</label>
                 <div class="col-md-4">
                     <select id="false" name="false" class="form-control">
                         <option value="{{$false}}">{{getValue($false)}}</option>
@@ -148,11 +192,11 @@ echo $from;
 
                     <td>{{$row->NVTName}}</td>
                     <td>{{$row->Timestamp}}</td>
-                    <td>{{$row->ENVI}}</td>
-                    <td> {{$row->TEMP}}</td>
-                    <td> {{getfalseOpen($row)}}</td>
-                    <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->id}}">Editovat</a></td>
-                    <td><a href="../../../../reports/OpenVas/row/{{$row->id}}">Zobrazit řádek</a></td>
+                    <td style="color:black" bgcolor="{{getColor($row->ENVI, $row)}}"> {{$row->ENVI}}</td>
+                    <td style="color:black" bgcolor="{{getColor($row->TEMP, $row)}}">{{$row->TEMP}}</td>
+                    <td style="color: black" bgcolor="{{getFalseColor(getfalseOpen($row))}}"  > {{getfalseOpen($row)}}</td>
+                    <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->idRow}}">Editovat</a></td>
+                    <td><a href="../../../../reports/OpenVas/row/{{$row->idRow}}">Zobrazit řádek</a></td>
 
             </tr>
             @endforeach
@@ -183,9 +227,9 @@ echo $from;
                 @foreach($nessus as $row)
                     <td>{{$row->Name}}</td>
                     <td>Není dostupné</td>
-                    <td>{{$row->ENVI}}</td>
-                    <td>{{$row->TEMP}}</td>
-                    <td> {{getfalseNes($row)}}</td>
+                    <td style="color:black" bgcolor="{{getColor($row->ENVI, $row)}}"> {{$row->ENVI}}</td>
+                    <td style="color:black" bgcolor="{{getColor($row->TEMP, $row)}}">{{$row->TEMP}}</td>
+                    <td style="color: black" bgcolor="{{getFalseColor(getfalseNes($row))}}"  > {{getfalseNes($row)}}</td>
                     <td><a href="../../../../reports/cvss/Nessus/edit/{{$row->idRow }}">Editovat</a></td>
                     <td><a href="../../../../reports/Nessus/row/{{$row->idRow}}">Zobrazit řádek</a></td>
 

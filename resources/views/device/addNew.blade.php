@@ -68,7 +68,7 @@ $devices = App\device_type::all();
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" >Pznámky:</label>
+        <label class="control-label col-sm-2" >Poznámky:</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" name="notes" >
         </div>
