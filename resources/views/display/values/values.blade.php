@@ -24,7 +24,7 @@
         $false = 0;
 
     }
-
+//nezahrnuje falseP
     if ($false == 0){
     $openvas = DB::table('report_items_openvas')
         ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
@@ -38,15 +38,17 @@
             ->where('CVSS_Nessus.falsePositive',false)->get();
     }
     else
-
+//zahrnuje falseP (chybi na koneci where fP)
         {
             $openvas = DB::table('report_items_openvas')
                 ->leftJoin('CVSS_OpenVas', 'report_items_openvas.id', '=', 'CVSS_OpenVas.idRow')->
-                where('CVSS_OpenVas.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_OpenVas.ignore', false)->get();
+                where('CVSS_OpenVas.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_OpenVas.ignore', false)
+                ->orderby('Timestamp', 'dsc')->get();
 
             $nessus = DB::table('report_items_nessus')
                 ->leftJoin('CVSS_Nessus', 'report_items_nessus.id', '=', 'CVSS_Nessus.idRow')->
                 where('CVSS_Nessus.ENVI','<=', $to)->where('ENVI', '>=', $from)->where('CVSS_Nessus.ignore', false)->get();
+
 
         }
 
@@ -174,6 +176,7 @@
             <thead>
             <tr>
                 <th scope="col">Popis</th>
+                <th scope="col">Report</th>
 
                 <th scope="col">Datum</th>
                 <th scope="col">CVSS Envi</th>
@@ -188,9 +191,13 @@
             <tr>
 
                 @foreach($openvas as $row)
+<?php
+                        $report = report::where('id', $row->idReport)->first();
 
+                    ?>
 
                     <td>{{$row->NVTName}}</td>
+                    <td><a href="/reports/OpenVas/{{$report->id}}">{{$report->name}}</a> </td>
                     <td>{{$row->Timestamp}}</td>
                     <td style="color:black" bgcolor="{{getColor($row->ENVI, $row)}}"> {{$row->ENVI}}</td>
                     <td style="color:black" bgcolor="{{getColor($row->TEMP, $row)}}">{{$row->TEMP}}</td>
