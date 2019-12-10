@@ -64,4 +64,13 @@ class device_groupsController extends Controller
 
         return view('display.goups.manage.show_groups')->with('message', $message);
     }
+
+
+    public function deleteDeviceFromGroup(Request $request){
+
+        $device = device_groups_asoc::find($request->id);
+        $device->delete();
+         return redirect()->back()->with('message', 'Zařízení bylo odstraněno ze skupiny...');
+
+    }
 }

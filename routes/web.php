@@ -217,6 +217,10 @@ Route::get('groups/display', function(){
 Route::get('groups/display/{id}', function($id){
     return view('display.goups.groups_display_second')->with('id', $id);
 });
+    //mazani ze skupin
+Route::get ('groups/manage/deleteFromGroup/{id}', 'device_groupsController@deleteDeviceFromGroup');
+
+
 
 //zobrazeni typy zarizeni
 Route::get ('types/display', function (){

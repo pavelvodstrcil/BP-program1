@@ -17,6 +17,13 @@
     ?>
     @endif
 
+    @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session()->get('message') }}
+        </div>
+    @endif
+
+
 
     <table class="table">
         <thead>
@@ -73,9 +80,11 @@
                                 @foreach($devices as $device)
                                     <?php
                                        $deviceName = App\device::where('id', '=', $device->idDevice)->value('name');
+
+
                                        ?>
 
-                                    <li>{{$deviceName}} - SMAZAT</li>
+                                       <li>{{$deviceName}} - <a href="deleteFromGroup/{{$device->id}}">Smazat se skupiny</a></li>
 
                                  @endforeach
                             </div>
