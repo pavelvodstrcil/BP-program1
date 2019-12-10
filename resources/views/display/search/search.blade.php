@@ -66,12 +66,15 @@
     }
 
 
+
+
+
     function getfalseNes($row){
         $return = \App\CVSS_Nessus::where('idRow', $row->idRow)->value("falsePositive");
         if ($return){
             return "true";
         }else {
-        return "false";
+            return "false";
         }}
 
 
@@ -81,8 +84,51 @@
         if ($return){
             return "true";
         }else {
-        return "false";
-    }}
+            return "false";
+        }
+    }
+
+    function getValue($false){
+        if ($false == 1){
+            return "ANO";
+        }else
+        {return "NE";}
+    }
+
+
+
+    function getColor($value, $row){
+
+        if (getfalseOpen($row) == "true"){
+            return "";
+        }elseif(getfalseNes($row) =="true"){
+            return "";
+
+        }else{
+
+            if($value == 0.0 ){
+                return  "#00ff00";
+            }elseif($value <=3.9 and $value >= 0.1) {
+                return "#00ff33";
+            }elseif ($value <=6.9 and $value >= 4.0){
+                return   "#ff6600";
+            }elseif($value <= 8.9and $value >= 7.0) {
+                return "#ff0033";
+            }elseif ($value <=10.0 and $value >= 9.0){
+                return "#990000";
+            }elseif ($value == -1){
+                return "";
+            }else {return "";}
+        }}
+
+    function getFalseColor($return){
+        if ($return == "true"){
+            return "green";
+        }else {
+            return "red";
+        }}
+
+
 
 
     ?>
@@ -158,11 +204,11 @@
 
                     <td>{{$row->NVTName}}</td>
                     <td>{{$row->Timestamp}}</td>
-                    <td>{{$row->ENVI}}</td>
-                    <td> {{$row->TEMP}}</td>
-                    <td> {{getfalseOpen($row)}}</td>
-                    <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->id}}">Editovat</a></td>
-                    <td><a href="../../../../reports/OpenVas/row/{{$row->id}}">Zobrazit řádek</a></td>
+                    <td style="color:black" bgcolor="{{getColor($row->ENVI, $row)}}"> {{$row->ENVI}}</td>
+                    <td style="color:black" bgcolor="{{getColor($row->TEMP, $row)}}">{{$row->TEMP}}</td>
+                    <td style="color: black" bgcolor="{{getFalseColor(getfalseOpen($row))}}"  > {{getfalseOpen($row)}}</td>
+                    <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->idRow}}">Editovat</a></td>
+                    <td><a href="../../../../reports/OpenVas/row/{{$row->idRow}}">Zobrazit řádek</a></td>
 
             </tr>
             @endforeach
@@ -193,9 +239,9 @@
                 @foreach($nessus as $row)
                     <td>{{$row->Name}}</td>
                     <td>Není dostupné</td>
-                    <td>{{$row->ENVI}}</td>
-                    <td>{{$row->TEMP}}</td>
-                    <td> {{getfalseNes($row)}}</td>
+                    <td style="color:black" bgcolor="{{getColor($row->ENVI, $row)}}"> {{$row->ENVI}}</td>
+                    <td style="color:black" bgcolor="{{getColor($row->TEMP, $row)}}">{{$row->TEMP}}</td>
+                    <td style="color: black" bgcolor="{{getFalseColor(getfalseNes($row))}}"  > {{getfalseNes($row)}}</td>
                     <td><a href="../../../../reports/cvss/Nessus/edit/{{$row->idRow }}">Editovat</a></td>
                     <td><a href="../../../../reports/Nessus/row/{{$row->idRow}}">Zobrazit řádek</a></td>
 

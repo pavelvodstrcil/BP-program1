@@ -30,7 +30,7 @@
             ?>
                         <li>Počet nahraných reportů: {{$size}}</li>
                         <li>Nejhorší CVSS ze všech nahraných reportů: {{$worstCVSSvalue}}</li>
-                   <<<<<>>>>>>>> GRAF <<<<<>>>>>>>>
+
                 </div>
             </div>
         </div>
