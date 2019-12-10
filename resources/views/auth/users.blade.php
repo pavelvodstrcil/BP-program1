@@ -23,6 +23,7 @@
 
     <?php
     $permission = app('\App\Http\Controllers\permissionsController')->getPermission(Auth::user(), "report_CVSS");
+
     ?>
 
     @if ($permission)
@@ -85,34 +86,13 @@
                 <td>{{$user->email}}</td>
                 <td>{{$premission}}</td>
 
-                <td><a data-toggle="modal" href="#edit{{$user->id}}">Editovat</a></td>
+                <td><a  href="edit/{{$user->id}}">Editovat</a></td>
                 <td><a data-toggle="modal" href="#delete{{$user->id}}">SMAZAT</a></td>
 
 
         </tr>
 
 
-        <div id="edit{{$user->id}}" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 align="center" style="color: RED;" class="modal-title">Editace uživatele {{$user->name}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        TADY FORMULAR
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Zrušit</button>
-                        <a target="_blank" href="nmap/{{$user->id}}">
-                            <button data-dismis="modal" type="button" class="btn btn-secondary">SPUSTIT</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
         <div id="delete{{$user->id}}" class="modal fade" role="dialog">

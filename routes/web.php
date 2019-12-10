@@ -277,10 +277,19 @@ Route::get ('missingDevices/{id}', function ($id){
 
 
     route::get ('users/change', function(){return view('auth.changePass');});
- //   route::post ('users/update', function(){return view('message')->with ("message", "test");});
+
     Route::post ('users/update', 'changePassController@changePassword');
 
+    Route::get ('users/edit/{id}', function ($id){
+        return view('auth.users_edit')->with('id', $id);
+    });
+
+
+    Route::post ('users/edit/save', 'UserController@edit');
+
+
     route::get ('users/show', function(){return view('auth.users');});
+
     Route::get ('users/delete/{id}', 'UserController@deleteUser');
 
 /*
