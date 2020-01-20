@@ -48,9 +48,9 @@ $permissions = \App\permissions::all();
             <td>{{$row->device_add}}</td>
             <td>{{$row->device_edit}}</td>
             <td>{{$row->report_delete}}</td>
-            <td>{{$row->users_premissions}}</td>
+            <td>{{$row->users_permissions}}</td>
             <td>{{$row->users}}</td>
-            <td><a  href="">Editovat</a></td>
+            <td><a  href="permissions/{{$row->id}}">Editovat</a></td>
 
 
 

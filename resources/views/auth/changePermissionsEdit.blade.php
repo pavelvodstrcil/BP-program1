@@ -13,7 +13,7 @@
     use App\permissions;
         $permission = permissions::find($id);
 $permissionUser = app('\App\Http\Controllers\permissionsController')->getPermission(Auth::user(), "users_permissions");
-        print_r($permission);
+
     ?>
 
 @if ($permissionUser)

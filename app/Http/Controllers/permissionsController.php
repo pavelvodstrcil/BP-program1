@@ -30,8 +30,8 @@ class permissionsController extends Controller
          $edit->device_add = $request->device_add;
          $edit->device_edit = $request->device_edit;
          $edit->report_delete = $request->report_delete;
-       $edit->users_permissions = $request->users_permissions;
-       $edit->users = $request->users;
+         $edit->users_permissions = $request->users_permissions;
+         $edit->users = $request->users;
 
 
          $edit->save();
