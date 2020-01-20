@@ -285,12 +285,21 @@ Route::get ('missingDevices/{id}', function ($id){
     });
 
 
+
+
     Route::post ('users/edit/save', 'UserController@edit');
 
 
     route::get ('users/show', function(){return view('auth.users');});
 
     Route::get ('users/delete/{id}', 'UserController@deleteUser');
+
+
+    route::get ('users/permissions', function(){return view('auth.changePermissions');});
+
+    route::get ('users/permissions/{id}', function($id){return view('auth.changePermissionsEdit')->with('id', $id);});
+
+    Route::post ('users/permissions/edit/update', 'permissionsController@update');
 
 /*
 |--------------------------------------------------------------------------

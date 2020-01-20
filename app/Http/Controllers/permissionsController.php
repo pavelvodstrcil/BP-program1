@@ -16,11 +16,31 @@ class permissionsController extends Controller
 
     return $perm;
 
-  //    if ($perm->$permission == 1 ){
-   //       return true;
-   //   }else {return false;}
-
-
 
     }
+
+ function   update(Request $request){
+
+
+
+         $edit = permissions::find($request->id);
+         $edit->report_display = $request->report_display;
+         $edit->report_upload = $request->report_upload;
+         $edit->report_CVSS = $request->report_CVSS;
+         $edit->device_add = $request->device_add;
+         $edit->device_edit = $request->device_edit;
+         $edit->report_delete = $request->report_delete;
+       $edit->users_permissions = $request->users_permissions;
+       $edit->users = $request->users;
+
+
+         $edit->save();
+
+         return redirect()->back()->with('message', 'Změna proběhla OK...');
+
+
+     }
+
 }
+
+

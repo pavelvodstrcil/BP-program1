@@ -22,7 +22,7 @@
     ?>
 
     <?php
-    $permission = app('\App\Http\Controllers\permissionsController')->getPermission(Auth::user(), "report_CVSS");
+    $permission = app('\App\Http\Controllers\permissionsController')->getPermission(Auth::user(), "users");
 
     ?>
 
