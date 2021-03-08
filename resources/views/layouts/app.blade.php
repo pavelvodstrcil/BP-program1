@@ -66,7 +66,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                     <li><a href="/display">Zobrazení dle sítí</a></li>
                                     <li><a href="/groups/display">Zobrazení dle skupin</a></li>
-                                    <li><a href="#">Zobrazení dle kritérií</a></li>
+                               <!--     <li><a href="#">Zobrazení dle kritérií</a></li> -->
                                     <li><a href="/types/display">Zobrazení dle typu zařízení</a></li>
                                     <li><a href="/criticality/display">Zobrazení dle kritičnosti</a></li>
                                     <li><a href="/device/show/CVSS">Zobrazit všechny zařízení</a></li>

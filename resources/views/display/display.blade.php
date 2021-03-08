@@ -3,10 +3,9 @@
 @section('content')
     <?php
 
-    use App\report_items_nessus ;
-    use App\report_items_openvas;
-    use App\device;
-    use App\report;
+
+
+
 
     $IP = $NET.".".$SUBNET.".".$SUBSUBNET.".".$HOST;
 
@@ -115,8 +114,8 @@
                 <td style="color: black"  bgcolor="{{getColor($row->ENVI, $row)}}">{{$row->ENVI}}</td>
                 <td style="color: black" bgcolor="{{getColor($row->TEMP, $row)}}"  > {{$row->TEMP}}</td>
                 <td style="color: black" bgcolor="{{getFalseColor(getfalseOpen($row))}}"  > {{getfalseOpen($row)}}</td>
-                <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->id}}">Editovat</a></td>
-                <td><a href="../../../../reports/OpenVas/row/{{$row->id}}">Zobrazit řádek</a></td>
+                <td><a href="../../../../reports/cvss/OpenVas/edit/{{$row->idRow}}">Editovat</a></td>
+                <td><a href="../../../../reports/OpenVas/row/{{$row->idRow}}">Zobrazit řádek</a></td>
 
         </tr>
         @endforeach
